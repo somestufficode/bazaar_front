@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import Product from "./Product";
+import Category from "./Category";
+
+// cant use quotation for Category.. have to explicitly import Category Schema.. or it's not recognized
 
 const collectionSchema = new mongoose.Schema({
     title: {
@@ -7,22 +9,18 @@ const collectionSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    description: String,
+    description: {
+        type: String,
+    },
     image: {
         type: String,
         required: true,
     },
-    products: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: Product,
-        }
-    ],
     categories: [
         { 
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'Category' 
-    }
+            ref: Category, 
+        }
     ], 
     createdAt: {
         type: Date,
@@ -32,7 +30,6 @@ const collectionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     }
-})
+});
 
 export default mongoose.models.Collection || mongoose.model('Collection', collectionSchema);
-

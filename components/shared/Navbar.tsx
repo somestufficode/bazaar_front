@@ -18,11 +18,11 @@ export default function Navbar() {
               Urban Bazaar
             </Link>
             <div className="hidden md:flex space-x-4">
-              <NavItem href="/women">WOMEN</NavItem>
-              <NavItem href="/men">MEN</NavItem>
-              <NavItem href="/girls">GIRLS</NavItem>
-              <NavItem href="/boys">BOYS</NavItem>
-              <NavItem href="/baby-toddler">BABY & TODDLER</NavItem>
+              <NavItem href="/collections/women">WOMEN</NavItem>
+              <NavItem href="/collections/men">MEN</NavItem>
+              <NavItem href="/collections/girls">GIRLS</NavItem>
+              <NavItem href="/collections/boys">BOYS</NavItem>
+              <NavItem href="/collections/baby-toddler">BABY & TODDLER</NavItem>
             </div>
           </div>
 

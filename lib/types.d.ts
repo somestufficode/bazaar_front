@@ -8,17 +8,21 @@ export type CollectionType = {
     updatedAt: Date;
   };
   
-export type ProductType = {
+  export type ProductType = {
     _id: string;
-    title: string;
+    name: string;
     description: string;
-    media: string[]; // Array of image URLs
-    category: string;
-    collections: CollectionType[]; // Array of collections the product belongs to
-    price: number; // Price of the product
-    createdAt: Date;
-    updatedAt: Date;
-  };
+    media: string[];  // Array of image URLs
+    categories: string[];  // Array of category ObjectIds (can be populated if needed)
+    collection: string;  // Collection ObjectId or populated collection name
+    price: number;
+    sizes: { size: string; stock: number }[];  // Array of size and stock objects
+    colors: { colorName: string; colorCode?: string; stock: number }[];  // Array of color variants
+    unitsInStock: number;  // Total units in stock across all variants
+    dimensions: { length?: number; width?: number; height?: number; weight?: number };
+    createdAt: string;
+    updatedAt: string;
+};
   
  export type OrderColumnType = {
     _id: string;
