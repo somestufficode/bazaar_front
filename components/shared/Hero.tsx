@@ -1,27 +1,53 @@
-import React from 'react'
-import Image from 'next/image'
-// love u
+'use client'
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const Hero = () => {
-  return (
-    <div className='container mx-auto mt-10 flex items-center justify-between px-6'>
-      <div className='max-w-lg'>
-        <h1 className='text-5xl font-bold leading-tight'>Discover Your Fashion with Us</h1>
-        <p className='mt-4 text-gray-600'>Explore our curated collection of stylish clothing and accessories tailored to your unique taste.</p>
-        <button className='mt-6 px-6 py-3 bg-red-500 text-white font-medium rounded-lg shadow-md'>EXPLORE NOW</button>
-      </div>
-      <div className='hidden lg:block'>
-        <Image 
-          src='/banner.jpg' 
-          alt='Fashion model' 
-          className='xlg roundedshadow-lg w-full max-w-sm'
-          width={500}
-          height={500}
-          priority={true}
-        />
-      </div>
-    </div>
-  )
+interface CollectionType {
+  _id: string;
+  title: string;
+  image: string;
 }
 
-export default Hero
+export default function Hero() {
+  const [collections, setCollections] = useState<CollectionType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch collections data
+    fetch('/api/collections')
+      .then((response) => response.json())
+      .then((data) => {
+        setCollections(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching collections:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-0">
+      {collections.map((collection) => (
+        <div key={collection._id} className="relative">
+          <Image
+            src={collection.image}
+            alt={collection.title}
+            width={500}
+            height={500}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white">
+            <h2 className="text-2xl font-bold mb-2">{collection.title}</h2>
+            <Link href={`/collections/${collection.title}`}>
+              <span className="text-sm hover:underline">Explore Now</span>
+            </Link>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
