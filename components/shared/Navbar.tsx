@@ -59,7 +59,7 @@ export default function Navbar() {
               <NavItem href="/collections/men">MEN</NavItem>
               <NavItem href="/collections/girls">GIRLS</NavItem>
               <NavItem href="/collections/boys">BOYS</NavItem>
-              <NavItem href="/collections/baby-toddler">BABY & TODDLER</NavItem>
+              {/* <NavItem href="/collections/baby-toddler">BABY & TODDLER</NavItem> */}
             </div>
           </div>
 

@@ -117,7 +117,7 @@ export default function CollectionPage() {
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
                     <h4 className="text-sm font-semibold truncate">{product.name}</h4>
-                    <p className="text-xs">${product.price.toFixed(2)}</p>
+                    <p className="text-xs">${product.price}</p>
                   </div>
                 </div>
               </Link>

@@ -1,66 +1,32 @@
-// import { auth } from "@clerk/nextjs";
-import { NextRequest, NextResponse } from "next/server";
-
-import Collection from "@/lib/models/Collection";
-import Product from "@/lib/models/Product";
-import { connectToDB } from "@/lib/mongoDB";
-
-export const POST = async (req: NextRequest) => {
-    try {
-        await connectToDB();
-
-        const { 
-            title, description, media, category, collections, price, 
-        } = await req.json();
-
-        if (!title || !description || !category || !price ) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        }
-
-        // Create the new product
-        const newProduct = new Product({
-            title,
-            description,
-            media,
-            category,
-            collections,
-            price,
-        });
-
-        await newProduct.save();
-
-        // If collections were provided, update those collections
-        if (collections && collections.length > 0) {
-            for (const collectionId of collections) {
-                const collection = await Collection.findById(collectionId);
-                if (collection) {
-                    collection.products.push(newProduct._id);
-                    await collection.save();
-                }
-            }
-        }
-
-        return NextResponse.json(newProduct, { status: 200 });
-    } catch (error) {
-        console.error("Error in creating product:", error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    }
-};
-
+import { NextResponse, NextRequest } from 'next/server';
+import { connectToDB } from '@/lib/mongoDB';
+import Category from '@/lib/models/Category';
+import Product from '@/lib/models/Product';
 
 export const GET = async (req: NextRequest) => {
-    try {
-        await connectToDB();
+  try {
+    await connectToDB();  // Ensure the database connection is established
 
-        const products = await Product.find()
-            .sort({ createdAt: "desc" })
-            .populate({ path: "collections", model: Collection });
+    // Fetch all categories
+    const categories = await Category.find({}).lean();
 
-        return NextResponse.json(products, { status: 200 });
-    } catch (err) {
-        console.log("[products_GET]", err);
-        return new NextResponse("Internal Error", { status: 500 });
+    // Initialize an array to hold all products from all categories
+    let allProducts = [];
+
+    // Iterate through each category and fetch its products
+    for (const category of categories) {
+      const products = await Product.find({ _id: { $in: category.products } }).lean();
+
+      // Push all the products from this category into the allProducts array
+      allProducts.push(...products);
     }
+
+    // Return the aggregated list of products
+    return NextResponse.json(allProducts, { status: 200 });
+  } catch (err) {
+    console.error(`[categories_GET]`, err);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
 };
 
 export const dynamic = "force-dynamic";
